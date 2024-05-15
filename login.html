@@ -1,0 +1,65 @@
+
+
+<html> 
+
+<head> 
+	<meta charset="UTF-8">	
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Registration Page</title> 
+	<link rel="stylesheet" href="./css/login.css"> 
+</head> 
+
+<body style="background-color: bisque;"> 
+
+	<div class="form-container"> 
+    <h2 style="text-align: center;">LOGIN FORM</h2>
+		<form method="post" action="login.php"> 
+		<div class="form-group">
+		<label for="username">Username: </label> 
+			<input type="text" id="username" name="username" required> 
+        </div>
+		<div class="form-group">
+			<label for="password">Password:</label> 
+			<input type="password" id="password" name="password" required> 
+		</div>
+		<div class="form-group">
+			<input type="submit" value="Login">
+		</div> 
+		</form> 
+		<div style="justify-content: center; align-items: center; text-align: center;">
+			<p> Does not have an account?</p> 
+		<a href="registration.html">Click Here</a> 
+		</div>
+	</div> 
+	<br> 
+</body> 
+
+<script>
+	function loginHandle() {
+		event.preventDefault();
+		console.log("submit called");
+		var email = document.getElementById("username").value;
+		var password = document.getElementById("password").value;
+
+		var request = new XMLHttpRequest();
+		request.open('POST', './login_jwt.php', true);
+		request.setRequestHeader('Content-Type', 'application/json');
+		request.onload = function () {
+			if(request.status === 200) {
+				var response = JSON.parse(request.responseText);
+				console.log(response);
+				if(response.jwt.length != 0 && response.role == "user") {
+					console.log("authenticated");
+					window.location.assign("index.html");
+				}
+			}
+			else {
+				alert("not authenticated");
+			}
+		};
+		request.send(JSON.stringify({email: email, password: password}));
+	}
+   </script>
+
+
+</html>
